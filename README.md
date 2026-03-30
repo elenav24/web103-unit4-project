@@ -39,7 +39,8 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented required features:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+![Screen Recording 2026-03-29 at 11 48 13 PM](https://github.com/user-attachments/assets/e922ba39-9feb-4925-81d1-0add1ecc59d3)
+
 
 GIF created with ...  GIF tool here
 
