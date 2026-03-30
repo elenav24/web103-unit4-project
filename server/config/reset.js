@@ -1,9 +1,9 @@
 import pool from './database.js'
 
-await pool.query(`DROP TABLE IF EXISTS custom_items;`)
+await pool.query(`DROP TABLE IF EXISTS custom_item;`)
 
 await pool.query(`
-  CREATE TABLE IF NOT EXISTS custom_items (
+  CREATE TABLE IF NOT EXISTS custom_item (
     id          SERIAL PRIMARY KEY,
     name        VARCHAR(100) NOT NULL,
     top         VARCHAR(50)  NOT NULL,
@@ -15,6 +15,6 @@ await pool.query(`
   );
 `)
 
-console.log('custom_items table reset successfully.')
+console.log('custom_item table reset successfully.')
 
 await pool.end()

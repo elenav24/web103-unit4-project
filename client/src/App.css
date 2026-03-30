@@ -3,14 +3,12 @@
   background: #fdf4ff;
 }
 
-/* ── Page wrapper ── */
 .page {
   max-width: 860px;
   margin: 0 auto;
   padding: 40px 24px 80px;
 }
 
-/* ── Cards ── */
 .card {
   background: var(--card-bg);
   border-radius: var(--radius);
@@ -20,7 +18,6 @@
   border: 1px solid rgba(244, 114, 182, 0.18);
 }
 
-/* ── Page headings ── */
 .page-title {
   font-family: var(--font-display);
   font-size: 2.6rem;
@@ -55,7 +52,6 @@
   line-height: 1;
 }
 
-/* ── Form elements ── */
 .field-group {
   display: flex;
   flex-direction: column;
@@ -135,11 +131,10 @@
   padding: 10px 24px;
   font-size: 1.1rem;
   font-weight: 600;
-  color: var(--purple-dark);
+  color: var(--white);
   margin: 16px 0 24px;
 }
 
-/* ── Buttons ── */
 .btn-primary {
   display: inline-block;
   padding: 13px 32px;
@@ -195,7 +190,6 @@
   border-color: #be123c;
 }
 
-/* ── Error message ── */
 .error-message {
   color: #be123c;
   background: #fff1f2;
@@ -206,7 +200,6 @@
   margin-bottom: 16px;
 }
 
-/* ── Outfit cards (list view) ── */
 .outfits-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -271,7 +264,6 @@
   justify-content: flex-end;
 }
 
-/* ── Detail page ── */
 .detail-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -308,7 +300,6 @@
   flex-wrap: wrap;
 }
 
-/* ── Empty state ── */
 .empty-state {
   text-align: center;
   padding: 60px 24px;
@@ -320,7 +311,6 @@
   margin-bottom: 20px;
 }
 
-/* ── Loading ── */
 .loading {
   text-align: center;
   padding: 60px;

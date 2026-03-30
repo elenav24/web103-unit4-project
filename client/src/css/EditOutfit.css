@@ -1,0 +1,165 @@
+@import './CreateOutfit.css';
+
+/* ── EditOutfit page ── */
+.eo-page {
+  min-height: calc(100vh - 68px);
+  padding: 36px 40px 120px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ── Header bar (same pattern as CreateOutfit) ── */
+.eo-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 32px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.eo-header-left { flex: 0 0 auto; }
+
+.eo-title {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--pink-dark), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 4px;
+}
+
+.eo-subtitle {
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+.eo-header-right {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex: 1;
+  max-width: 480px;
+}
+
+.eo-error { margin-bottom: 20px; }
+
+/* ── Category sections ── */
+.eo-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.eo-category-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.eo-cat-icon {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+
+.eo-cat-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-mid);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+/* ── 2×2 image grid ── */
+.eo-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+/* ── Individual tile ── */
+.eo-tile {
+  position: relative;
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px solid #e9d5ff;
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  padding: 0;
+  text-align: left;
+  box-shadow: 0 2px 10px rgba(168, 85, 247, 0.07);
+}
+
+.eo-tile:hover {
+  border-color: var(--pink);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(244, 114, 182, 0.2);
+}
+
+.eo-tile.selected {
+  border-color: var(--pink-dark);
+  box-shadow: 0 0 0 3px rgba(219, 39, 119, 0.2);
+}
+
+.eo-tile-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+.eo-tile-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  gap: 4px;
+}
+
+.eo-tile-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.eo-tile-price {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--pink-dark);
+  flex-shrink: 0;
+}
+
+.eo-tile-check {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--pink-dark), var(--purple));
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(168, 85, 247, 0.4);
+}
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .eo-page { padding: 24px 16px 120px; }
+  .eo-header { flex-direction: column; }
+  .co-header-right { max-width: 100%; width: 100%; }
+  .eo-grid { grid-template-columns: repeat(2, 1fr); }
+}

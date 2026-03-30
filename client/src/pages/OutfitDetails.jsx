@@ -1,24 +1,19 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { getOutfitById, deleteOutfit } from '../services/OutfitsAPI.js'
+import { getOptions, getOutfitById, deleteOutfit } from '../services/OutfitsAPI.js'
 import { calcPrice } from '../utilities/calcPrice.js'
-import { OUTFIT_OPTIONS } from '../utilities/outfitOptions.js'
 import '../App.css'
-
-const getLabel = (category, key) => {
-  const option = OUTFIT_OPTIONS[category]?.find(o => o.key === key)
-  return option ? option.label : key
-}
 
 const OutfitDetails = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const [outfit, setOutfit] = useState(null)
+  const [options, setOptions] = useState(null)
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    getOutfitById(id)
-      .then(setOutfit)
+    Promise.all([getOutfitById(id), getOptions()])
+      .then(([o, opts]) => { setOutfit(o); setOptions(opts) })
       .catch(() => setError('Failed to load outfit.'))
   }, [id])
 
@@ -32,10 +27,16 @@ const OutfitDetails = () => {
   }
 
   if (error) return <div className="page"><p className="error-message">{error}</p></div>
-  if (!outfit) return <div className="loading">Loading...</div>
+  if (!outfit || !options) return <div className="loading">Loading...</div>
 
-  const selections = { top: outfit.top, bottom: outfit.bottom, shoes: outfit.shoes, accessory: outfit.accessory }
-  const totalPrice = calcPrice(selections, OUTFIT_OPTIONS)
+  const getLabel = (category, key) => options[category]?.find(o => o.key === key)?.label ?? key
+
+  const totalPrice = calcPrice(
+    { top: outfit.top, bottom: outfit.bottom, shoes: outfit.shoes, accessory: outfit.accessory },
+    options
+  )
+
+  const ICONS = { top: '/top.svg', bottom: '/pants.svg', shoes: '/Running_shoe_icon.png', accessory: '/accessories.svg' }
 
   return (
     <div className="page">
@@ -44,25 +45,15 @@ const OutfitDetails = () => {
 
       <div className="card">
         <div className="detail-grid">
-          <div className="detail-item">
-            <div className="label">Top</div>
-            <div className="value">👕 {getLabel('top', outfit.top)}</div>
-          </div>
-          <div className="detail-item">
-            <div className="label">Bottom</div>
-            <div className="value">👖 {getLabel('bottom', outfit.bottom)}</div>
-          </div>
-          <div className="detail-item">
-            <div className="label">Shoes</div>
-            <div className="value">👟 {getLabel('shoes', outfit.shoes)}</div>
-          </div>
-          <div className="detail-item">
-            <div className="label">Accessory</div>
-            <div className="value">💍 {getLabel('accessory', outfit.accessory)}</div>
-          </div>
+          {['top', 'bottom', 'shoes', 'accessory'].map(cat => (
+            <div key={cat} className="detail-item">
+              <div className="label">{cat.charAt(0).toUpperCase() + cat.slice(1)}</div>
+              <div className="value"><img src={ICONS[cat]} alt={cat} style={{width:'18px',height:'18px',objectFit:'contain',marginRight:'6px',verticalAlign:'middle'}} />{getLabel(cat, outfit[cat])}</div>
+            </div>
+          ))}
         </div>
 
-        <div className="total-price">✨ Total: ${totalPrice}</div>
+        <div className="total-price">Total: ${totalPrice}</div>
 
         {error && <p className="error-message">{error}</p>}
 

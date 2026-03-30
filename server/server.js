@@ -2,8 +2,7 @@ import express from 'express'
 import path from 'path'
 import favicon from 'serve-favicon'
 import dotenv from 'dotenv'
-
-// import the router from your routes file
+import { OUTFIT_OPTIONS } from './data/outfitOptions.js'
 import outfitsRouter from './routes/outfitsRouter.js'
 
 
@@ -23,7 +22,7 @@ else if (process.env.NODE_ENV === 'production') {
     app.use(express.static('public'))
 }
 
-// specify the api path for the server to use
+app.get('/api/options', (req, res) => res.json(OUTFIT_OPTIONS))
 app.use('/api/outfits', outfitsRouter)
 
 

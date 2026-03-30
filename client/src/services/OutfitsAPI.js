@@ -5,6 +5,11 @@ async function handleResponse(res) {
   return res.json();
 }
 
+export async function getOptions() {
+  const res = await fetch('/api/options');
+  return handleResponse(res);
+}
+
 export async function getAllOutfits() {
   const res = await fetch(BASE_URL);
   return handleResponse(res);

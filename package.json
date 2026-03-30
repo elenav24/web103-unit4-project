@@ -6,7 +6,8 @@
     "start": "cd server && node server",
     "build": "cd client && vite build",
     "client": "cd client && vite",
-    "server": "cd server && nodemon server"
+    "server": "cd server && nodemon server",
+    "reset" : "cd server && node config/reset.js"
   },
   "dependencies": {
     "@picocss/pico": "^1.5.7",

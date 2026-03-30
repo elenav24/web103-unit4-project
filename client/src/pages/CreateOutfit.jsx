@@ -1,61 +1,39 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { OUTFIT_OPTIONS } from '../utilities/outfitOptions.js'
+import { getOptions, createOutfit } from '../services/OutfitsAPI.js'
 import { calcPrice } from '../utilities/calcPrice.js'
-import { validateOutfit } from '../utilities/validateOutfit.js'
-import { createOutfit } from '../services/OutfitsAPI.js'
 import '../css/CreateOutfit.css'
 
-// Placeholder fashion images per option key (using picsum with consistent seeds)
-const OPTION_IMAGES = {
-  // tops
-  blazer:          'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=200&h=200&fit=crop',
-  tshirt:          'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200&h=200&fit=crop',
-  hoodie:          'https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=200&h=200&fit=crop',
-  athletic_top:    'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=200&h=200&fit=crop',
-  // bottoms
-  dress_pants:     'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=200&h=200&fit=crop',
-  jeans:           'https://images.unsplash.com/photo-1542272604-787c3835535d?w=200&h=200&fit=crop',
-  athletic_shorts: 'https://images.unsplash.com/photo-1591195853828-11db59a44f43?w=200&h=200&fit=crop',
-  skirt:           'https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?w=200&h=200&fit=crop',
-  // shoes
-  dress_shoes:     'https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=200&h=200&fit=crop',
-  sneakers:        'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&h=200&fit=crop',
-  running_shoes:   'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=200&h=200&fit=crop',
-  sandals:         'https://images.unsplash.com/photo-1603487742131-4160ec999306?w=200&h=200&fit=crop',
-  // accessories
-  tie:             'https://images.unsplash.com/photo-1589756823695-278bc923f962?w=200&h=200&fit=crop',
-  cap:             'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=200&h=200&fit=crop',
-  watch:           'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&h=200&fit=crop',
-  headband:        'https://images.unsplash.com/photo-1617952739825-a0e6e3e5e1e1?w=200&h=200&fit=crop',
-}
-
 const CATEGORY_ICONS = {
-  top: '👔',
-  bottom: '👖',
-  shoes: '👟',
-  accessory: '💍',
-}
-
-function buildDefaultSelections() {
-  const defaults = {}
-  for (const category in OUTFIT_OPTIONS) {
-    defaults[category] = OUTFIT_OPTIONS[category][0].key
-  }
-  return defaults
+  top:       '/top.svg',
+  bottom:    '/pants.svg',
+  shoes:     '/Running_shoe_icon.png',
+  accessory: '/accessories.svg',
 }
 
 const CreateOutfit = () => {
   const navigate = useNavigate()
+  const [options, setOptions] = useState(null)
   const [name, setName] = useState('')
-  const [selections, setSelections] = useState(buildDefaultSelections)
+  const [selections, setSelections] = useState({})
   const [openCategory, setOpenCategory] = useState(null)
   const [error, setError] = useState('')
   const dropdownRef = useRef(null)
 
-  const totalPrice = calcPrice(selections, OUTFIT_OPTIONS)
+  // Fetch options from server on mount
+  useEffect(() => {
+    getOptions()
+      .then(data => {
+        setOptions(data)
+        // default to first option per category
+        const defaults = {}
+        for (const cat in data) defaults[cat] = data[cat][0].key
+        setSelections(defaults)
+      })
+      .catch(() => setError('Failed to load outfit options.'))
+  }, [])
 
-  // Close dropdown when clicking outside
+  // Close dropdown on outside click
   useEffect(() => {
     function handleClickOutside(e) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -66,6 +44,10 @@ const CreateOutfit = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
+  function calcTotal() {
+    return calcPrice(selections, options)
+  }
+
   function toggleCategory(cat) {
     setOpenCategory(prev => (prev === cat ? null : cat))
   }
@@ -75,23 +57,23 @@ const CreateOutfit = () => {
     setOpenCategory(null)
   }
 
+  function getSelectedLabel(category) {
+    const opt = options?.[category]?.find(o => o.key === selections[category])
+    return opt ? opt.label : '—'
+  }
+
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
-    const { valid, message } = validateOutfit(selections)
-    if (!valid) { setError(message); return }
     try {
-      await createOutfit({ name, ...selections, total_price: totalPrice })
+      await createOutfit({ name, ...selections, total_price: calcTotal() })
       navigate('/outfits')
     } catch {
       setError('Failed to save outfit. Please try again.')
     }
   }
 
-  const getSelectedLabel = (category) => {
-    const opt = OUTFIT_OPTIONS[category].find(o => o.key === selections[category])
-    return opt ? opt.label : '—'
-  }
+  if (!options) return <div className="loading">Loading options...</div>
 
   return (
     <div className="co-page">
@@ -118,16 +100,15 @@ const CreateOutfit = () => {
 
       {error && <p className="error-message co-error">{error}</p>}
 
-      {/* Category selector bar + dropdowns */}
       <div className="co-selector-bar" ref={dropdownRef}>
-        {Object.keys(OUTFIT_OPTIONS).map(category => (
+        {Object.keys(options).map(category => (
           <div key={category} className="co-category-wrap">
             <button
               type="button"
               className={`co-category-btn${openCategory === category ? ' open' : ''}`}
               onClick={() => toggleCategory(category)}
             >
-              <span className="co-cat-icon">{CATEGORY_ICONS[category]}</span>
+              <img src={CATEGORY_ICONS[category]} alt={category} className="co-cat-icon" />
               <span className="co-cat-info">
                 <span className="co-cat-name">{category}</span>
                 <span className="co-cat-selected">{getSelectedLabel(category)}</span>
@@ -137,7 +118,7 @@ const CreateOutfit = () => {
 
             {openCategory === category && (
               <div className="co-dropdown">
-                {OUTFIT_OPTIONS[category].map(opt => (
+                {options[category].map(opt => (
                   <button
                     key={opt.key}
                     type="button"
@@ -145,7 +126,7 @@ const CreateOutfit = () => {
                     onClick={() => handleSelect(category, opt.key)}
                   >
                     <img
-                      src={OPTION_IMAGES[opt.key]}
+                      src={opt.image_url}
                       alt={opt.label}
                       className="co-option-img"
                       onError={e => { e.target.style.display = 'none' }}
@@ -160,10 +141,33 @@ const CreateOutfit = () => {
         ))}
       </div>
 
-      {/* Price badge bottom-right */}
+      {/* Live outfit preview */}
+      <div className="co-preview">
+        <h3 className="co-preview-title">Your Look</h3>
+        <div className="co-preview-grid">
+          {Object.keys(options).map(category => {
+            const selected = options[category].find(o => o.key === selections[category])
+            return (
+              <div key={category} className="co-preview-item">
+                <img
+                  src={selected?.image_url}
+                  alt={selected?.label ?? category}
+                  className="co-preview-img"
+                  onError={e => { e.target.style.display = 'none' }}
+                />
+                <div className="co-preview-item-info">
+                  <span className="co-preview-cat">{category}</span>
+                  <span className="co-preview-label">{selected?.label ?? '—'}</span>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
       <div className="co-price-bar">
         <span className="co-price-label">Total</span>
-        <span className="co-price-value">${totalPrice}</span>
+        <span className="co-price-value">${calcTotal()}</span>
       </div>
     </div>
   )

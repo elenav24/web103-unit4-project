@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { getAllOutfits, deleteOutfit } from '../services/OutfitsAPI.js'
 import '../App.css'
+import top from '/top.svg'
+import pants from '/pants.svg'
+import shoes from '/Running_shoe_icon.png'
+import accessories from '/accessories.svg'
 
 const ViewOutfits = () => {
   const [outfits, setOutfits] = useState([])
@@ -41,10 +45,10 @@ const ViewOutfits = () => {
               <Link to={`/outfits/${outfit.id}`} className="outfit-card-link">
                 <h2>{outfit.name}</h2>
                 <div className="outfit-card-tags">
-                  <span className="outfit-tag">👕 {outfit.top}</span>
-                  <span className="outfit-tag">👖 {outfit.bottom}</span>
-                  <span className="outfit-tag">👟 {outfit.shoes}</span>
-                  <span className="outfit-tag">💍 {outfit.accessory}</span>
+                  <span className="outfit-tag"> <img src={top} alt={outfit.top} className="eo-cat-icon"/> {outfit.top}</span>
+                  <span className="outfit-tag"> <img src={pants} alt={outfit.bottom} className="eo-cat-icon"/> {outfit.bottom}</span>
+                  <span className="outfit-tag"> <img src={shoes} alt={outfit.shoes} className="eo-cat-icon"/> {outfit.shoes}</span>
+                  <span className="outfit-tag"> <img src={accessories} alt={outfit.accessory} className="eo-cat-icon"/> {outfit.accessory}</span>
                 </div>
                 <p className="outfit-card-price">${outfit.total_price}</p>
               </Link>
