@@ -42,7 +42,7 @@ Here's a walkthrough of implemented required features:
 ![Screen Recording 2026-03-29 at 11 48 13 PM](https://github.com/user-attachments/assets/e922ba39-9feb-4925-81d1-0add1ecc59d3)
 
 
-GIF created with ...  GIF tool here
+GIF created with Screen Record + Free Convert
 
 ## Notes
 
