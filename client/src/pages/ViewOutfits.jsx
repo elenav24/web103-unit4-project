@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { getAllOutfits, deleteOutfit } from '../services/OutfitsAPI.js'
 import '../App.css'
 import top from '/top.svg'
@@ -10,12 +10,17 @@ import accessories from '/accessories.svg'
 const ViewOutfits = () => {
   const [outfits, setOutfits] = useState([])
   const [error, setError] = useState('')
+  const nav = useNavigate();
 
   useEffect(() => {
     getAllOutfits()
       .then(data => setOutfits(data))
       .catch(() => setError('Failed to load outfits.'))
   }, [])
+
+  async function handleEdit(id) {
+    nav(`/edit/${id}`)
+  }
 
   async function handleDelete(id) {
     try {
@@ -53,6 +58,7 @@ const ViewOutfits = () => {
                 <p className="outfit-card-price">${outfit.total_price}</p>
               </Link>
               <div className="outfit-card-footer">
+                <button className="btn-secondary" onClick={() => handleEdit(outfit.id)}>Edit</button>
                 <button className="btn-danger" onClick={() => handleDelete(outfit.id)}>Delete</button>
               </div>
             </div>
