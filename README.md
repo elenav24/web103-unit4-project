@@ -39,10 +39,17 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented required features:
 
-![Screen Recording 2026-03-29 at 11 48 13 PM](https://github.com/user-attachments/assets/e922ba39-9feb-4925-81d1-0add1ecc59d3)
+basic features and creating outfit:
+
+![Untitled design](https://github.com/user-attachments/assets/92711c76-fb5d-4f3d-837f-5a4fff7ee77e)
 
 
-GIF created with Screen Record + Free Convert
+editing and deleting features:
+
+![Untitled design (1)](https://github.com/user-attachments/assets/8867ec7b-9582-4564-b0d0-88f146df4b79)
+
+
+GIF created with Screen Record + Canva
 
 ## Notes
 
